@@ -1,0 +1,12 @@
+com\wendys\demo\entity\DetallePedido.class
+com\wendys\demo\runner\DemoRunner.class
+com\wendys\demo\runner\WendysDemoService$IdsDemo.class
+com\wendys\demo\entity\Producto.class
+com\wendys\demo\entity\Pedido.class
+com\wendys\demo\runner\WendysDemoService.class
+com\wendys\demo\entity\Cliente.class
+com\wendys\demo\repository\PedidoRepository.class
+com\wendys\demo\WendysDemoApplication.class
+com\wendys\demo\repository\ClienteRepository.class
+com\wendys\demo\repository\DetallePedidoRepository.class
+com\wendys\demo\repository\ProductoRepository.class
