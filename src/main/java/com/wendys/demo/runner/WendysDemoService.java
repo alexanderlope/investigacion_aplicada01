@@ -53,6 +53,8 @@ public class WendysDemoService {
 
         System.out.println(">>> Cliente, Pedido y " + pedido.getDetalles().size()
                 + " DetallePedido guardados con UN SOLO save() gracias a CascadeType.ALL");
+        System.out.println(">>> Pedido Wendy's #" + pedido.getId() + " | estado: "
+                + pedido.getEstado() + " | total: $" + pedido.getTotal());
 
         return new IdsDemo(cliente.getId(), pedido.getId());
     }
@@ -63,6 +65,8 @@ public class WendysDemoService {
         // Ya estamos FUERA del metodo transaccional (este metodo no lo es)
         // y aun asi esto funciona sin error, porque es EAGER:
         System.out.println("Pedido #" + pedido.getId() + " pertenece a: " + pedido.getCliente().getNombre());
+        System.out.println("Estado: " + pedido.getEstado());
+        System.out.println("El total no se consulta aqui porque recorre 'detalles', una coleccion LAZY.");
     }
 
     @Transactional
