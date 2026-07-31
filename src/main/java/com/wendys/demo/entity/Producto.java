@@ -5,6 +5,16 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Producto del menu de Wendy's (Baconator, Frosty, Papas, etc.)
+ *
+ * Lado "NO dueño" de la relacion con DetallePedido.
+ * Un mismo Producto puede aparecer en muchos DetallePedido (uno por cada
+ * vez que alguien lo pide), por eso @OneToMany(mappedBy = "producto").
+ *
+ * FetchType.LAZY aqui es clave: si cargas un Producto, NO quieres traerte
+ * automaticamente todo el historial de pedidos donde aparecio.
+ */
 @Entity
 @Table(name = "producto")
 public class Producto {

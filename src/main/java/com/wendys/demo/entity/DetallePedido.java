@@ -3,6 +3,19 @@ package com.wendys.demo.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+/**
+ * DetallePedido = una linea dentro de un pedido.
+ * Ej: "2 x Baconator" o "1 x Frosty de chocolate".
+ *
+ * Esta entidad resuelve la relacion muchos-a-muchos entre Pedido y
+ * Producto (un pedido tiene muchos productos, un producto aparece en
+ * muchos pedidos), pero de forma "enriquecida": aqui guardamos ademas
+ * la cantidad y el precio unitario en el momento de la compra.
+ *
+ * Es DUEÑA de DOS relaciones @ManyToOne:
+ *  - hacia Pedido   (@JoinColumn pedido_id)
+ *  - hacia Producto (@JoinColumn producto_id)
+ */
 @Entity
 @Table(name = "detalle_pedido")
 public class DetallePedido {

@@ -46,7 +46,14 @@ public class DemoRunner implements CommandLineRunner {
         // 5) orphanRemoval: quitar un detalle de la lista sin borrar el pedido
         service.demostrarOrphanRemoval(pedidoId);
 
-        // 6) CascadeType.REMOVE: borrar el pedido completo
+        // 6) @OneToOne: emitir una Factura para el Pedido y ver ambos lados de la relacion
+        Long facturaId = service.emitirFactura(pedidoId, "FAC-0001");
+        service.demostrarRelacionUnoAUno(facturaId, pedidoId);
+
+        // 7) Borramos la Factura antes de borrar el Pedido (no hay cascade entre ellos)
+        service.eliminarFactura(facturaId);
+
+        // 8) CascadeType.REMOVE: borrar el pedido completo
         service.demostrarCascadaRemove(pedidoId);
 
         System.out.println("\n==================================================");

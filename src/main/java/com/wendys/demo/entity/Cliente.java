@@ -4,6 +4,17 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Cliente que hace pedidos en Wendy's.
+ *
+ * Relacion 1 : N con Pedido.
+ * Lado "NO dueño" -> mappedBy = "cliente" (el nombre del campo @ManyToOne
+ * dentro de la clase Pedido).
+ *
+ * CascadeType.ALL: si guardo/borro un Cliente, se propaga a sus Pedidos.
+ * FetchType.LAZY: al traer un Cliente NO quiero traer automaticamente
+ * todos sus pedidos (puede ser una lista enorme e innecesaria).
+ */
 @Entity
 @Table(name = "cliente")
 public class Cliente {

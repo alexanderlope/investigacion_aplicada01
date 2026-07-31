@@ -1,11 +1,26 @@
 package com.wendys.demo.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Pedido hecho por un Cliente (ej: "Pedido #1 de Juan").
+ *
+ * Relaciones:
+ * 1) Pedido -> Cliente  : @ManyToOne (lado DUEÑO, tiene @JoinColumn)
+ * 2) Pedido -> Detalles : @OneToMany (lado NO dueño, mappedBy)
+ * 3) Pedido -> Factura  : @OneToOne  (lado NO dueño, mappedBy).
+ *    El dueño real es Factura, que tiene la columna pedido_id.
+ *
+ * FetchType.EAGER en "cliente": tiene sentido porque casi siempre que
+ * muestras un pedido, quieres saber de quien es, sin una consulta extra.
+ *
+ * CascadeType.ALL + orphanRemoval = true en "detalles": si borras un
+ * Pedido, se borran sus DetallePedido. Si quitas un detalle de la lista
+ * y guardas, ese detalle huerfano se elimina de la base de datos.
+ */
 @Entity
 @Table(name = "pedido")
 public class Pedido {
@@ -17,12 +32,7 @@ public class Pedido {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
-    @Column(nullable = false, length = 30)
     private String tipoEntrega; // "En restaurante", "Para llevar", "Delivery"
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private EstadoPedido estado;
 
     // Lado DUEÑO de la relacion: aqui vive la clave foranea cliente_id
     @ManyToOne(fetch = FetchType.EAGER)
@@ -33,34 +43,18 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DetallePedido> detalles = new ArrayList<>();
 
+    // Lado NO dueño de la relacion 1:1. El dueño es Factura (tiene @JoinColumn pedido_id).
+    // No se pone cascade aqui a proposito: emitir/borrar una Factura es una accion
+    // independiente, no algo que deba pasar automaticamente al tocar el Pedido.
+    @OneToOne(mappedBy = "pedido", fetch = FetchType.LAZY)
+    private Factura factura;
+
     public Pedido() {
     }
 
     public Pedido(LocalDateTime fecha, String tipoEntrega) {
         this.fecha = fecha;
         this.tipoEntrega = tipoEntrega;
-        this.estado = EstadoPedido.RECIBIDO;
-    }
-
-    /**
-     * Valor total del pedido. No se persiste: se obtiene de sus detalles
-     * para evitar almacenar un dato derivado que podria quedar desactualizado.
-     */
-    @Transient
-    public BigDecimal getTotal() {
-        return detalles.stream()
-                .map(DetallePedido::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @PrePersist
-    private void prepararPedidoNuevo() {
-        if (fecha == null) {
-            fecha = LocalDateTime.now();
-        }
-        if (estado == null) {
-            estado = EstadoPedido.RECIBIDO;
-        }
     }
 
     public void agregarDetalle(DetallePedido detalle) {
@@ -99,14 +93,6 @@ public class Pedido {
         this.tipoEntrega = tipoEntrega;
     }
 
-    public EstadoPedido getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoPedido estado) {
-        this.estado = estado;
-    }
-
     public Cliente getCliente() {
         return cliente;
     }
@@ -119,17 +105,16 @@ public class Pedido {
         return detalles;
     }
 
-    @Override
-    public String toString() {
-        return "Pedido{id=" + id + ", fecha=" + fecha + ", tipoEntrega='" + tipoEntrega
-                + "', estado=" + estado + ", total=" + getTotal() + "}";
+    public Factura getFactura() {
+        return factura;
     }
 
-    public enum EstadoPedido {
-        RECIBIDO,
-        EN_PREPARACION,
-        LISTO,
-        ENTREGADO,
-        CANCELADO
+    public void setFactura(Factura factura) {
+        this.factura = factura;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{id=" + id + ", fecha=" + fecha + ", tipoEntrega='" + tipoEntrega + "'}";
     }
 }
