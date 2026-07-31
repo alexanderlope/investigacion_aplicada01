@@ -1,11 +1,12 @@
 # Wendy's JPA Demo — Tema 4: Relaciones entre entidades
 
-Integrantes
-Enrique Alexander Solano Lopez SL223188
-Adrián Alejandro Jiménez Mena JM242020
-Mario Antonio Rivera Hernandez RH242680
-Sergio Enrique Valencia Rosales VR242686
-Lazaro Moises Vargas Granados VG210810
+Integrantes:
+
+- Enrique Alexander Solano Lopez SL223188
+- Adrián Alejandro Jiménez Mena JM242020
+- Mario Antonio Rivera Hernandez RH242680
+- Sergio Enrique Valencia Rosales VR242686
+- Lazaro Moises Vargas Granados VG210810
 
 Proyecto Spring Boot + JPA/Hibernate que demuestra `@OneToOne`, `@OneToMany`,
 `@ManyToOne`, `@ManyToMany` (conceptualmente), `@JoinColumn`, `mappedBy`,
